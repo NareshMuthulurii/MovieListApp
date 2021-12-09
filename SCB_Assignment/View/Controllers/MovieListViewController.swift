@@ -27,6 +27,7 @@ class MovieListViewController: UIViewController {
         fetchMoviesData()
     }
     
+    // Fetch Movies
     func fetchMoviesData() {
         moviesViewModel.fetchMoviesData { [weak self] in
             self?.collectionView.dataSource = self
@@ -35,23 +36,24 @@ class MovieListViewController: UIViewController {
     }
 }
 
+// MARK: - CollectionView Delegate & DataSource
 extension MovieListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return moviesViewModel.numberOfRowsInSection(section: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MoviesListCell", for: indexPath) as? MovieListCollectionViewCell else { fatalError("Unable to dequeue Cell.") }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.movieListCell, for: indexPath) as? MovieListCollectionViewCell else { fatalError(Constants.dequeCellFatalError) }
         let movie = moviesViewModel.cellForItemAt(indexPath: indexPath)
         cell.setCellWithValuesOf(movie)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MoviesListCell", for: indexPath) as! MovieListCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.movieListCell, for: indexPath) as! MovieListCollectionViewCell
         let movie = moviesViewModel.cellForItemAt(indexPath: indexPath)
         cell.setCellWithValuesOf(movie)
-        if let movieDetailsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MovieDetailsViewController") as? MovieDetailsViewController {
+        if let movieDetailsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Constants.detailsViewController) as? MovieDetailsViewController {
             movieDetailsVC.imdbId = movie.imdbID
             if let navigator = navigationController {
                 navigator.pushViewController(movieDetailsVC, animated: true)
@@ -59,6 +61,7 @@ extension MovieListViewController: UICollectionViewDelegate, UICollectionViewDat
         }
     }
 }
+
 
 extension MovieListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
@@ -68,6 +71,7 @@ extension MovieListViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+// MARK: - SearchBarController Delegate
 extension MovieListViewController: UISearchBarDelegate, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         moviesViewModel.updatingSearchResults(for: searchController)

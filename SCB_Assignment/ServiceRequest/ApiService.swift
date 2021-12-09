@@ -10,20 +10,6 @@ import Foundation
 class ApiService {
     
     private var dataTask: URLSessionDataTask?
-    
-    func getMoviesData(completion: @escaping (Result<MoviesData, Error>) -> Void) {
-        let moviesURL = "http://www.omdbapi.com/?apikey=b9bd48a6&s=Marvel&type=movie"
-        guard let url = URL(string: moviesURL) else {return}
-        apiCall(url: url, completion: completion)
-    }
-    
-    func getMovieDetailsData(id: String, completion: @escaping (Result<MovieDetailsData, Error>) -> Void) {
-        let moviesURL = "http://www.omdbapi.com/?apikey=b9bd48a6&i=\(id)"
-        print(moviesURL)
-        guard let url = URL(string: moviesURL) else {return}
-        apiCall(url: url, completion: completion)
-    }
-    
     func apiCall<T: Decodable>(url: URL, completion: @escaping (Result<T, Error>) -> Void) {
         dataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             // Handle error
@@ -48,6 +34,7 @@ class ApiService {
                 DispatchQueue.main.async {
                     completion(.success(jsonData))
                 }
+                
             } catch let error {
                 completion(.failure(error))
             }

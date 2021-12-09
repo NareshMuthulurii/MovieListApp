@@ -28,6 +28,7 @@ class MovieDetailsViewController: UIViewController {
         fetchMovieDetails()
     }
     
+    // fetch Movie Details
     func fetchMovieDetails() {
         guard let id = imdbId else { return }
         moviesDetailsViewModel.fetchMovieDetailsData(id: id, completion: { [weak self] in
@@ -39,17 +40,17 @@ class MovieDetailsViewController: UIViewController {
     
     func updateUI() {
         guard let movieDetails = moviesDetailsViewModel.movieDetails else { return }
-        guard let posterImageURL = URL(string: movieDetails.poster) else { return }
-        self.poster.loadImage(fromURL: posterImageURL, placeHolderImage: "placeholder")
+        guard let posterImageURL = URL(string: movieDetails.poster ?? "") else { return }
+        self.poster.loadImage(fromURL: posterImageURL, placeHolderImage: Constants.imagePlaceholder)
         self.movieTitle.text = movieDetails.title
-        self.year.text = "Year: \(movieDetails.year)"
-        self.categories.text = "Genre : \n \(movieDetails.genre)"
-        self.duration.text = "Duration : \n \(movieDetails.runtime)"
-        self.rating.text = "Rating: \(movieDetails.imdbRating)"
-        self.synopsis.text = "Description: \n\(movieDetails.plot)"
-        self.director.text = "Director: \(movieDetails.director)"
-        self.writer.text =   "Writer: \(movieDetails.writer)"
-        self.actor.text =    "Actors: \(movieDetails.actors)"
+        self.year.text = Constants.year + (movieDetails.year ?? "")
+        self.categories.text = Constants.gener + (movieDetails.genre ?? "")
+        self.duration.text = Constants.duration + (movieDetails.runtime ?? "")
+        self.rating.text = Constants.rating + (movieDetails.imdbRating ?? "")
+        self.synopsis.text = Constants.synopsis + (movieDetails.plot ?? "")
+        self.director.text = Constants.director + (movieDetails.director ?? "")
+        self.writer.text =   Constants.writer + (movieDetails.writer ?? "")
+        self.actor.text =    Constants.actors + (movieDetails.actors ?? "")
     }
     
 }

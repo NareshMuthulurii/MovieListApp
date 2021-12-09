@@ -8,12 +8,18 @@
 import Foundation
 import UIKit
 
-class MoviesViewModel {
+class MoviesViewModel: NSObject {
     
-    private var apiService = ApiService()
-    var movies = [Movies]()
+    private var apiService: RequestService!
+    var movies: [Movies]!
     var searching = false
     var searchedMovie = [Movies]()
+    
+    override init() {
+        super.init()
+        self.apiService = RequestService()
+        self.movies = [Movies]()
+    }
     
     func configureSearchController(searchController: UISearchController) {
         searchController.loadViewIfNeeded()
@@ -29,7 +35,8 @@ class MoviesViewModel {
             searching = true
             searchedMovie.removeAll()
             for movie in movies {
-                if movie.title.lowercased().contains(searchText.lowercased()) {
+                guard let title = movie.title else { return }
+                if title.lowercased().contains(searchText.lowercased()) {
                     searchedMovie.append(movie)
                 }
             }
@@ -46,11 +53,10 @@ class MoviesViewModel {
     }
     
     func fetchMoviesData(completion: @escaping () -> ()) {
-        apiService.getMoviesData { [weak self] (result) in
-            
+        apiService.getMoviesData{ [weak self] (result) in
             switch result {
             case .success(let listOf):
-                self?.movies = listOf.movies
+                self?.movies = listOf.movies ?? []
                 completion()
             case .failure(let error):
                 print("Error processing json data: \(error)")

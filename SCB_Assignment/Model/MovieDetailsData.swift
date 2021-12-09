@@ -8,15 +8,15 @@
 import Foundation
 
 struct MovieDetailsData: Codable {
-    let title, year, rated, released: String
-    let runtime, genre, director, writer: String
-    let actors, plot, language, country: String
-    let awards: String
-    let poster: String
-    let ratings: [Rating]
-    let metascore, imdbRating, imdbVotes, imdbID: String
-    let type, dvd, boxOffice, production: String
-    let website, response: String
+    let title, year, rated, released: String?
+    let runtime, genre, director, writer: String?
+    let actors, plot, language, country: String?
+    let awards: String?
+    let poster: String?
+    let ratings: [Rating]?
+    let metascore, imdbRating, imdbVotes, imdbID: String?
+    let type, dvd, boxOffice, production: String?
+    let website, response: String?
     
     enum CodingKeys: String, CodingKey {
         case title = "Title"
@@ -47,7 +47,7 @@ struct MovieDetailsData: Codable {
 
 // MARK: - Rating
 struct Rating: Codable {
-    let source, value: String
+    let source, value: String?
     
     enum CodingKeys: String, CodingKey {
         case source = "Source"

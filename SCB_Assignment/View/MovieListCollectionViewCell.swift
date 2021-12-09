@@ -23,6 +23,6 @@ class MovieListCollectionViewCell: UICollectionViewCell {
         guard let posterString = poster else {return}
         urlString = posterString
         guard let posterImageURL = URL(string: urlString) else { return }
-        self.moviePoster.loadImage(fromURL: posterImageURL, placeHolderImage: "placeholder")
+        self.moviePoster.loadImage(fromURL: posterImageURL, placeHolderImage: Constants.imagePlaceholder)
     }
 }

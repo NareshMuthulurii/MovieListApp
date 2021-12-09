@@ -7,10 +7,15 @@
 
 import Foundation
 
-class MovieDetailsViewModel {
+class MovieDetailsViewModel: NSObject {
     
-    private var apiService = ApiService()
+    private var apiService: RequestService!
     var movieDetails: MovieDetailsData?
+    
+    override init() {
+        super.init()
+        self.apiService = RequestService()
+    }
     
     func fetchMovieDetailsData(id: String, completion: @escaping () -> ()) {
         apiService.getMovieDetailsData(id: id, completion: { [weak self] (result) in
