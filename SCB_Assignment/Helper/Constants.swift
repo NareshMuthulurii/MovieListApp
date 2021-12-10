@@ -7,12 +7,7 @@
 
 import Foundation
 
-class Constants {
-    // URL Constants
-    static let moviesUrl = "http://www.omdbapi.com/?apikey=b9bd48a6&s=Marvel&type=movie"
-    static let movieDetailsUrl = "http://www.omdbapi.com/?apikey=b9bd48a6&i="
-   
-    //Constant Values
+struct Constants { 
     static let dequeCellFatalError = "Unable to dequeue Cell."
     static let detailsViewController = "MovieDetailsViewController"
     static let movieListCell = "MoviesListCell"
@@ -25,6 +20,4 @@ class Constants {
     static let director = "Director: "
     static let writer = "Writer: "
     static let actors = "Actors: "
-    
-    
 }

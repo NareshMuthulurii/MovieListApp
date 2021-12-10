@@ -22,7 +22,6 @@ class MovieDetailsViewModel: NSObject {
             switch result {
             case .success(let details):
                 self?.movieDetails = details
-                print(self?.movieDetails as Any)
                 completion()
             case .failure(let error):
                 print("Error processing json data: \(error)")

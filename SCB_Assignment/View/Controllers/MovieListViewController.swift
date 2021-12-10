@@ -17,6 +17,11 @@ class MovieListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupSearchBar()
+        fetchMoviesData()
+    }
+    
+    fileprivate func setupSearchBar() {
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
         moviesViewModel.configureSearchController(searchController: searchController)
@@ -24,15 +29,15 @@ class MovieListViewController: UIViewController {
         self.navigationItem.searchController = searchController
         self.navigationController?.navigationBar.prefersLargeTitles = true
         definesPresentationContext = true
-        fetchMoviesData()
     }
     
     // Fetch Movies
     func fetchMoviesData() {
-        moviesViewModel.fetchMoviesData { [weak self] in
-            self?.collectionView.dataSource = self
-            self?.collectionView.reloadData()
-        }
+        moviesViewModel.fetchMoviesData(movieType: "marvel", completion: { [weak self] in
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+            }
+        })
     }
 }
 
@@ -44,17 +49,15 @@ extension MovieListViewController: UICollectionViewDelegate, UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.movieListCell, for: indexPath) as? MovieListCollectionViewCell else { fatalError(Constants.dequeCellFatalError) }
-        let movie = moviesViewModel.cellForItemAt(indexPath: indexPath)
-        cell.setCellWithValuesOf(movie)
+        cell.setCellWithValuesOf(moviesViewModel.cellForItemAt(indexPath: indexPath))
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.movieListCell, for: indexPath) as! MovieListCollectionViewCell
-        let movie = moviesViewModel.cellForItemAt(indexPath: indexPath)
-        cell.setCellWithValuesOf(movie)
+        cell.setCellWithValuesOf(moviesViewModel.cellForItemAt(indexPath: indexPath))
         if let movieDetailsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Constants.detailsViewController) as? MovieDetailsViewController {
-            movieDetailsVC.imdbId = movie.imdbID
+            movieDetailsVC.imdbId = moviesViewModel.cellForItemAt(indexPath: indexPath).imdbID
             if let navigator = navigationController {
                 navigator.pushViewController(movieDetailsVC, animated: true)
             }
@@ -75,7 +78,9 @@ extension MovieListViewController: UICollectionViewDelegateFlowLayout {
 extension MovieListViewController: UISearchBarDelegate, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         moviesViewModel.updatingSearchResults(for: searchController)
-        collectionView.reloadData()
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
     
     func search(searchBar: UISearchBar) {
